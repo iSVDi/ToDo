@@ -19,7 +19,7 @@
 		F3F9C17C2D511623000BB167 /* Exceptions for "ToDos" folder in "ToDos" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = F3F9C1692D511622000BB167 /* ToDos */;
 		};
@@ -160,7 +160,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RBRFGT8CHB;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ToDos/Info.plist;
+				INFOPLIST_FILE = ToDos/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -188,7 +188,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RBRFGT8CHB;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ToDos/Info.plist;
+				INFOPLIST_FILE = ToDos/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
