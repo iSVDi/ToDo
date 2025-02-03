@@ -68,16 +68,38 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
+//MARK: - UISearchResultsUpdating
+
+extension ToDoListViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        //MARK: implement
+           print("Search - ", text)
+    }
+    
+}
+
 private extension ToDoListViewController {
     func setupViews() {
         navigationItem.title = Constants.navigationBar
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 106
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(ToDoListTableViewCell.self, forCellReuseIdentifier: Constants.tableViewReusableCell)
+        tableView.backgroundColor = .black
+        tableView.separatorColor = .systemGray3
+        
+        let search = UISearchController(searchResultsController: nil)
+        search.searchResultsUpdater = self
+        search.obscuresBackgroundDuringPresentation = false
+        search.searchBar.placeholder = "Search"
+        navigationItem.searchController = search
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
     }
     
     func setupConstraints() {

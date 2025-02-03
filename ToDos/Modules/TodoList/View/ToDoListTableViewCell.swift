@@ -26,16 +26,27 @@ class ToDoListTableViewCell: UITableViewCell {
     func setupData(model: ToDo) {
         let imageName = model.isCompleted ? Constants.completedImageName : Constants.uncompletedImageName
         stateImageView.image = UIImage(systemName: imageName)
-        stateImageView.tintColor = model.isCompleted ? .yellow : .gray
+        
         titleLabel.text = model.title
         descriptionLabel.text = model.description
         dateLabel.text = getDateLabelFrom(model.creationDate)
+        
+        updateViewsBy(by: model.isCompleted)
     }
+    
     
 }
 
 private extension ToDoListTableViewCell {
+    func updateViewsBy(by isCompleted : Bool) {
+        stateImageView.tintColor = isCompleted ? .yellow : .gray
+        titleLabel.textColor = isCompleted ? .gray : .white
+        descriptionLabel.textColor = isCompleted ? .gray : .white
+    }
+    
     func setupViews() {
+        self.backgroundColor = .black
+        
         stateImageView.size(Constants.stateImageSize)
         stateImageView.contentMode = .scaleAspectFit
         
@@ -43,6 +54,10 @@ private extension ToDoListTableViewCell {
         descriptionLabel.font = .systemFont(ofSize: 12, weight: .regular)
         descriptionLabel.numberOfLines = 2
         dateLabel.font = .systemFont(ofSize: 12, weight: .regular)
+
+        dateLabel.textColor = .gray
+        
+        selectionStyle = .none
     }
     
     func setupLayout() {
