@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F3F9C1842D511C23000BB167 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = F3F9C1832D511C23000BB167 /* TinyConstraints */; };
+		F3F9C1872D511C82000BB167 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = F3F9C1862D511C82000BB167 /* Moya */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		F3F9C16A2D511622000BB167 /* ToDos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3F9C1872D511C82000BB167 /* Moya in Frameworks */,
+				F3F9C1842D511C23000BB167 /* TinyConstraints in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = ToDos;
 			packageProductDependencies = (
+				F3F9C1832D511C23000BB167 /* TinyConstraints */,
+				F3F9C1862D511C82000BB167 /* Moya */,
 			);
 			productName = ToDos;
 			productReference = F3F9C16A2D511622000BB167 /* ToDos.app */;
@@ -107,6 +116,10 @@
 			);
 			mainGroup = F3F9C1612D511622000BB167;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F3F9C1822D511C23000BB167 /* XCRemoteSwiftPackageReference "TinyConstraints" */,
+				F3F9C1852D511C82000BB167 /* XCRemoteSwiftPackageReference "Moya" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F3F9C16B2D511622000BB167 /* Products */;
 			projectDirPath = "";
@@ -335,6 +348,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F3F9C1822D511C23000BB167 /* XCRemoteSwiftPackageReference "TinyConstraints" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/roberthein/TinyConstraints.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.2;
+			};
+		};
+		F3F9C1852D511C82000BB167 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F3F9C1832D511C23000BB167 /* TinyConstraints */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3F9C1822D511C23000BB167 /* XCRemoteSwiftPackageReference "TinyConstraints" */;
+			productName = TinyConstraints;
+		};
+		F3F9C1862D511C82000BB167 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3F9C1852D511C82000BB167 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F3F9C1622D511622000BB167 /* Project object */;
 }
