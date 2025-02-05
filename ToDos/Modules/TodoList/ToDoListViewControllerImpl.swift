@@ -8,19 +8,19 @@
 import UIKit
 import TinyConstraints
 
-protocol ToDoListViewController: AnyObject {
+protocol ToDoListPresenterToView: AnyObject {
     func reloadRow(at id: Int)
     func reloadTableView()
 }
 
 class ToDoListViewControllerImpl: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
-    private var presenter: ToDoListPresenter!
+    private var presenter: ToDoListViewToPresenter!
 
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        presenter = ToDoListPresenterImpl(toDoListView: self)
+        presenter = ToDoListPresenterImpl(todoListView: self)
     }
     
     required init?(coder: NSCoder) {
@@ -34,7 +34,7 @@ class ToDoListViewControllerImpl: UIViewController {
     
 }
 
-extension ToDoListViewControllerImpl: ToDoListViewController {
+extension ToDoListViewControllerImpl: ToDoListPresenterToView {
     func reloadRow(at id: Int) {
         tableView.reloadRows(at: [IndexPath(row: id, section: 0)], with: .none)
     }
@@ -52,20 +52,19 @@ extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.getAllToDos().count
+        presenter.getAllTodos().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
-              let toDoCell = cell as? ToDoListTableViewCell else { return UITableViewCell() }
-        toDoCell.setupData(model: presenter.getAllToDos()[indexPath.row])
-        return toDoCell
+              let todoCell = cell as? ToDoListTableViewCell else { return UITableViewCell() }
+        todoCell.setupData(model: presenter.getAllTodos()[indexPath.row])
+        return todoCell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
-              let toDoCell = cell as? ToDoListTableViewCell else { return }
-        //MARK: implement
+              let todoCell = cell as? ToDoListTableViewCell else { return }
         presenter.didTapCell(id: indexPath.row)
     }
     
@@ -76,7 +75,6 @@ extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource
 extension ToDoListViewControllerImpl: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
-        //MARK: implement
         presenter.searchBy(text: text)
     }
     
