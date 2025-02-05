@@ -9,16 +9,16 @@ import Foundation
 import Moya
 import OSLog
 
-protocol ToDoListPresenterToInteractor {
-    func getAllTodos()
+protocol ToDoListPresenterToInteractor: AnyObject {
+    func fetchAllTodos()
 }
 
 class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
     let provider = MoyaProvider<ToDoDataFetcher>()
     let logger = Logger()
-    var presenter: ToDoListInteractorToPresenter?
+    weak var presenter: ToDoListInteractorToPresenter?
     
-    func getAllTodos() {
+    func fetchAllTodos() {
         provider.request(.getAllTodos) { [weak self] result in
             guard let self else { return }
             switch result {

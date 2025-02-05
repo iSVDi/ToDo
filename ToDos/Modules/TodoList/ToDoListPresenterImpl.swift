@@ -7,7 +7,8 @@
 
 import Foundation
 
-protocol ToDoListViewToPresenter {
+protocol ToDoListViewToPresenter: AnyObject {
+    func viewDidLoadHandler()
     func getAllTodos() -> [ToDo]
     func didTapCell(id: Int)
     func createTodo()
@@ -24,28 +25,26 @@ protocol ToDoListInteractorToPresenter: AnyObject {
 class ToDoListPresenterImpl {
     var todos: [ToDo] = []
     
-    weak var todoListView: ToDoListPresenterToView?
-    private let interactor: ToDoListPresenterToInteractor?
+    weak var viewController: ToDoListPresenterToView?
+    var interactor: ToDoListPresenterToInteractor?
+    var router: ToDoListPresenterToRouter?
     
-    init(todoListView: ToDoListPresenterToView) {
-        self.todoListView = todoListView
-        let interactor = ToDoListInteractorImpl()
-        self.interactor = interactor
-        interactor.presenter = self
-        interactor.getAllTodos()
-    }
 }
 
 //MARK: - ToDoListViewToPresenter
 
 extension ToDoListPresenterImpl: ToDoListViewToPresenter {
+    func viewDidLoadHandler() {
+        interactor?.fetchAllTodos()
+    }
+    
     func getAllTodos() -> [ToDo] {
         return todos
     }
     
     func didTapCell(id: Int) {
         todos[id].isCompleted.toggle()
-        todoListView?.reloadRow(at: id)
+        viewController?.reloadRow(at: id)
     }
     
     func createTodo() {
@@ -79,7 +78,7 @@ extension ToDoListPresenterImpl: ToDoListInteractorToPresenter {
                 creationDate: .now
             )
         }
-        todoListView?.reloadTableView()
+        viewController?.reloadTableView()
     }
     
     func getTitleFromDescription(_ description: String) -> String {
