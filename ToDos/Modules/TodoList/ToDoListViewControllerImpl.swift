@@ -13,11 +13,10 @@ protocol ToDoListPresenterToView: AnyObject {
     func reloadTableView()
 }
 
-class ToDoListViewControllerImpl: UIViewController {
+final class ToDoListViewControllerImpl: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
     var presenter: ToDoListViewToPresenter?
 
-    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -44,7 +43,7 @@ extension ToDoListViewControllerImpl: ToDoListPresenterToView {
     }
 }
 
-//MARK: UITableViewDelegate, UITableViewDataSource
+//MARK: - UITableViewDelegate, UITableViewDataSource
 
 extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -68,7 +67,7 @@ extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource
         guard let presenter,
                 let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
               let todoCell = cell as? ToDoListTableViewCell else { return }
-        presenter.didTapCell(id: indexPath.row)
+        presenter.didTapCell(cellId: indexPath.row)
     }
     
 }
@@ -83,6 +82,8 @@ extension ToDoListViewControllerImpl: UISearchResultsUpdating {
     }
     
 }
+
+//MARK: - Helpers
 
 private extension ToDoListViewControllerImpl {
     func setupViews() {

@@ -13,11 +13,11 @@ protocol ToDoListPresenterToInteractor: AnyObject {
     func fetchAllTodos()
 }
 
-class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
-    let provider = MoyaProvider<ToDoDataFetcher>()
-    let logger = Logger()
+final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
     weak var presenter: ToDoListInteractorToPresenter?
-    
+    private let provider = MoyaProvider<ToDoDataFetcher>()
+    private let logger = Logger()
+
     func fetchAllTodos() {
         provider.request(.getAllTodos) { [weak self] result in
             guard let self else { return }

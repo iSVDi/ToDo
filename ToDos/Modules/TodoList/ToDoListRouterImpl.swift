@@ -13,7 +13,7 @@ protocol ToDoListPresenterToRouter: AnyObject {
     func pushFrom(vc: UIViewController, from navController: UINavigationController)
 }
 
-class ToDoListRouterImpl: ToDoListPresenterToRouter {
+final class ToDoListRouterImpl: ToDoListPresenterToRouter {
     static func getModule() -> UINavigationController {
         let viewController = ToDoListViewControllerImpl()
         let presenter = ToDoListPresenterImpl()

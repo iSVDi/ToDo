@@ -10,7 +10,7 @@ import Foundation
 protocol ToDoListViewToPresenter: AnyObject {
     func viewDidLoadHandler()
     func getAllTodos() -> [ToDo]
-    func didTapCell(id: Int)
+    func didTapCell(cellId: Int)
     func createTodo()
     func editTodo(id: Int)
     func deleteTodo(id: Int)
@@ -22,13 +22,24 @@ protocol ToDoListInteractorToPresenter: AnyObject {
     func getAllTodoFailure()
 }
 
-class ToDoListPresenterImpl {
-    var todos: [ToDo] = []
-    
+final class ToDoListPresenterImpl {
     weak var viewController: ToDoListPresenterToView?
     var interactor: ToDoListPresenterToInteractor?
     var router: ToDoListPresenterToRouter?
     
+    private var todos: [ToDo] = []
+    private var searchQuery: String = ""
+}
+
+//MARK: - Helpers
+
+private extension ToDoListPresenterImpl {
+    func getFilteredTodos() -> [ToDo] {
+        guard !searchQuery.isEmpty else { return todos }
+        return todos.filter {
+            $0.description.lowercased().contains(searchQuery) || $0.description.lowercased().contains(searchQuery)
+        }
+    }
 }
 
 //MARK: - ToDoListViewToPresenter
@@ -39,12 +50,16 @@ extension ToDoListPresenterImpl: ToDoListViewToPresenter {
     }
     
     func getAllTodos() -> [ToDo] {
-        return todos
+        guard !searchQuery.isEmpty else { return todos }
+        return getFilteredTodos()
     }
     
-    func didTapCell(id: Int) {
-        todos[id].isCompleted.toggle()
-        viewController?.reloadRow(at: id)
+    func didTapCell(cellId: Int) {
+        let filteredTodos = getFilteredTodos()
+        let id = filteredTodos[cellId].id
+        guard let arrIndex = todos.firstIndex(where: { $0.id == id}) else { return }
+        todos[arrIndex].isCompleted.toggle()
+        viewController?.reloadRow(at: cellId)
     }
     
     func createTodo() {
@@ -60,7 +75,8 @@ extension ToDoListPresenterImpl: ToDoListViewToPresenter {
     }
     
     func searchBy(text: String) {
-        print("Search by " + text)
+        searchQuery = text.lowercased()
+        viewController?.reloadTableView()
     }
 }
 
@@ -94,7 +110,7 @@ extension ToDoListPresenterImpl: ToDoListInteractorToPresenter {
     }
     
     func getAllTodoFailure() {
-        
+        //TODO: implement TODO
     }
     
     
