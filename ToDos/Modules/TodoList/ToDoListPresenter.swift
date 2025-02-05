@@ -18,7 +18,7 @@ protocol ToDoListPresenter {
 }
 
 class ToDoListPresenterImpl: ToDoListPresenter {
-    private let mockToDos: [ToDo] = [
+    private var mockToDos: [ToDo] = [
         .init(
             id: 1,
             title: "Do something nice",
@@ -42,13 +42,19 @@ class ToDoListPresenterImpl: ToDoListPresenter {
         )
     ]
     
+    weak var toDoListView: ToDoListViewController?
+    
+    init(toDoListView: ToDoListViewController) {
+        self.toDoListView = toDoListView
+    }
     
     func getAllToDos() -> [ToDo] {
         return mockToDos
     }
     
     func didTapCell(id: Int) {
-        print("Tapped cell with id \(id)")
+        mockToDos[id].isCompleted.toggle()
+        toDoListView?.reloadRow(at: id)
     }
     
     func createToDo() {

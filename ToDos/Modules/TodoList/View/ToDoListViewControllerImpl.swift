@@ -8,19 +8,40 @@
 import UIKit
 import TinyConstraints
 
-protocol ToDoListViewController {
+protocol ToDoListViewController: AnyObject {
+    func reloadRow(at id: Int)
     func reloadTableView()
 }
 
 class ToDoListViewControllerImpl: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
-    private let presenter: ToDoListPresenter = ToDoListPresenterImpl()
+    private var presenter: ToDoListPresenter!
+
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        presenter = ToDoListPresenterImpl(toDoListView: self)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         setupViews()
         setupConstraints()
     }
     
+}
+
+extension ToDoListViewControllerImpl: ToDoListViewController {
+    func reloadRow(at id: Int) {
+        tableView.reloadRows(at: [IndexPath(row: id, section: 0)], with: .none)
+    }
+    
+    func reloadTableView() {
+        tableView.reloadData()
+    }
 }
 
 //MARK: UITableViewDelegate, UITableViewDataSource
