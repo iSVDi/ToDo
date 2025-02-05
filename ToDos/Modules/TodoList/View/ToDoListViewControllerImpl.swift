@@ -1,5 +1,5 @@
 //
-//  ToDoListViewController.swift
+//  ToDoListViewControllerImpl.swift
 //  ToDos
 //
 //  Created by Daniil on 03.02.2025.
@@ -8,31 +8,13 @@
 import UIKit
 import TinyConstraints
 
-class ToDoListViewController: UIViewController {
+protocol ToDoListViewController {
+    func reloadTableView()
+}
+
+class ToDoListViewControllerImpl: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
-    private let mockToDos: [ToDo] = [
-        .init(
-            id: 1,
-            title: "Do something nice",
-            description: "description cool and really, really really ",
-            isCompleted: false,
-            creationDate: .now
-        ),
-        .init(
-            id: 2,
-            title: "Memorize a poem",
-            description: "description cool and really, really really really really really really really really really really really really really really really really really really really really really  long",
-            isCompleted: true,
-            creationDate: .now
-        ),
-        .init(
-            id: 3,
-            title: "Watch a classic movie",
-            description: "description cool and really, really really really really really really really really really really really really really really really really really really really really really  long",
-            isCompleted: true,
-            creationDate: .now
-        )
-    ]
+    private let presenter: ToDoListPresenter = ToDoListPresenterImpl()
     
     override func viewDidLoad() {
         setupViews()
@@ -43,19 +25,19 @@ class ToDoListViewController: UIViewController {
 
 //MARK: UITableViewDelegate, UITableViewDataSource
 
-extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
+extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        mockToDos.count
+        presenter.getAllToDos().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
               let toDoCell = cell as? ToDoListTableViewCell else { return UITableViewCell() }
-        toDoCell.setupData(model: mockToDos[indexPath.row])
+        toDoCell.setupData(model: presenter.getAllToDos()[indexPath.row])
         return toDoCell
     }
     
@@ -63,23 +45,23 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
               let toDoCell = cell as? ToDoListTableViewCell else { return }
         //MARK: implement
-        print("did tap on todo cell")
+        presenter.didTapCell(id: indexPath.row)
     }
     
 }
 
 //MARK: - UISearchResultsUpdating
 
-extension ToDoListViewController: UISearchResultsUpdating {
+extension ToDoListViewControllerImpl: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
         //MARK: implement
-           print("Search - ", text)
+        presenter.searchBy(text: text)
     }
     
 }
 
-private extension ToDoListViewController {
+private extension ToDoListViewControllerImpl {
     func setupViews() {
         navigationItem.title = Constants.navigationBar
         navigationController?.navigationBar.prefersLargeTitles = true
