@@ -85,15 +85,24 @@ extension ToDoListPresenterImpl: ToDoListViewToPresenter {
 
 extension ToDoListPresenterImpl: ToDoListInteractorToPresenter {
     func getAllTodoSuccess(todos: [ToDoEntity]) {
-        self.todos = todos.map { todo in
-            return ToDo(
-                id: todo.id,
-                title: getTitleFromDescription(todo.description),
-                description: todo.description,
-                isCompleted: todo.isCompleted,
+        todos.forEach { entity in
+            let todo = ToDo(
+                id: entity.id,
+                title: getTitleFromDescription(entity.description),
+                description: entity.description,
+                isCompleted: entity.isCompleted,
                 creationDate: .now
             )
+            self.todos.append(todo)
+            
+            let todoModel = DataManager.createTodoModel()
+            todoModel.id = todo.id
+            todoModel.details = todo.description
+            todoModel.title = todo.title
+            todoModel.isCompleted = todo.isCompleted
+            todoModel.creationDate = todo.creationDate
         }
+        DataManager.save()
         viewController?.reloadTableView()
     }
     

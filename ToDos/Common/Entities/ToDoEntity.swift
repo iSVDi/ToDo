@@ -14,7 +14,7 @@ struct ToDoBunch: Codable {
 }
 
 struct ToDoEntity: Codable {
-    let id: Int
+    let id: Int32
     let description: String
     let isCompleted: Bool
     
