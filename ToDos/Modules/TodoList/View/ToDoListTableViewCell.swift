@@ -27,7 +27,7 @@ class ToDoListTableViewCell: UITableViewCell {
         let imageName = model.isCompleted ? Constants.completedImageName : Constants.uncompletedImageName
         stateImageView.image = UIImage(systemName: imageName)
         
-        titleLabel.text = model.title
+        titleLabel.attributedText = getTitle(isCompleted: model.isCompleted, title: model.title)
         descriptionLabel.text = model.description
         dateLabel.text = getDateLabelFrom(model.creationDate)
         
@@ -38,6 +38,19 @@ class ToDoListTableViewCell: UITableViewCell {
 }
 
 private extension ToDoListTableViewCell {
+    
+    func getTitle(isCompleted: Bool, title: String) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString(string: title)
+        if isCompleted {
+            attributedString.addAttribute(
+                .strikethroughStyle,
+                value: NSUnderlineStyle.single.rawValue,
+                range: NSRange(location: 0, length: attributedString.length)
+            )
+        }
+        return attributedString
+    }
+    
     func updateViewsBy(by isCompleted : Bool) {
         stateImageView.tintColor = isCompleted ? .yellow : .gray
         titleLabel.textColor = isCompleted ? .gray : .white
