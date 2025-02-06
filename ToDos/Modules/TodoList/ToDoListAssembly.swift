@@ -11,10 +11,10 @@ import UIKit
 final class ToDoListAssembly {
     
     static func getModule() -> UINavigationController {
-        let viewController = ToDoListViewControllerImpl()
-        let presenter = ToDoListPresenterImpl()
-        let interactor = ToDoListInteractorImpl()
-        let router = ToDoListRouterImpl()
+        let viewController = ToDoListViewController()
+        let presenter = ToDoListPresenter()
+        let interactor = ToDoListInteractor()
+        let router = ToDoListRouter()
         
         viewController.presenter = presenter
         presenter.viewController = viewController

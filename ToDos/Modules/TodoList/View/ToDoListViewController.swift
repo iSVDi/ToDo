@@ -1,5 +1,5 @@
 //
-//  ToDoListViewControllerImpl.swift
+//  ToDoListViewController.swift
 //  ToDos
 //
 //  Created by Daniil on 03.02.2025.
@@ -8,14 +8,11 @@
 import UIKit
 import TinyConstraints
 
-protocol ToDoListPresenterToView: AnyObject {
-    func reloadRow(at id: Int)
-    func reloadTableView()
-}
 
-final class ToDoListViewControllerImpl: UIViewController {
+
+final class ToDoListViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
-    var presenter: ToDoListViewToPresenter?
+    var presenter: ToDoListViewOutput?
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -33,7 +30,7 @@ final class ToDoListViewControllerImpl: UIViewController {
     
 }
 
-extension ToDoListViewControllerImpl: ToDoListPresenterToView {
+extension ToDoListViewController: ToDoListViewInput {
     func reloadRow(at id: Int) {
         tableView.reloadRows(at: [IndexPath(row: id, section: 0)], with: .none)
     }
@@ -45,7 +42,7 @@ extension ToDoListViewControllerImpl: ToDoListPresenterToView {
 
 //MARK: - UITableViewDelegate, UITableViewDataSource
 
-extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource {
+extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         1
     }
@@ -97,7 +94,7 @@ extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource
 
 //MARK: - UISearchResultsUpdating
 
-extension ToDoListViewControllerImpl: UISearchResultsUpdating {
+extension ToDoListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let presenter,
             let text = searchController.searchBar.text else { return }
@@ -108,7 +105,7 @@ extension ToDoListViewControllerImpl: UISearchResultsUpdating {
 
 //MARK: - Helpers
 
-private extension ToDoListViewControllerImpl {
+private extension ToDoListViewController {
     func setupViews() {
         navigationItem.title = Constants.navigationBar
         navigationController?.navigationBar.prefersLargeTitles = true

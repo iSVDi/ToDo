@@ -7,26 +7,10 @@
 
 import Foundation
 
-protocol ToDoListViewToPresenter: AnyObject {
-    func viewDidLoadHandler()
-    func getAllTodos() -> [ToDo]
-    func didTapCell(cellId: Int)
-    func createTodo()
-    func editTodo(id: Int)
-    func deleteTodo(id: Int)
-    func searchBy(text: String)
-}
-
-protocol ToDoListInteractorToPresenter: AnyObject {
-    func getAllTodoSuccess(_ todos: [ToDoEntity])
-    func getAllCoreDataTodoSuccess(_ todos: [ToDo])
-    func getAllTodoFailure()
-}
-
-final class ToDoListPresenterImpl {
-    weak var viewController: ToDoListPresenterToView?
-    var interactor: ToDoListPresenterToInteractor?
-    var router: ToDoListPresenterToRouter?
+final class ToDoListPresenter {
+    weak var viewController: ToDoListViewInput?
+    var interactor: ToDoListInteractorInput?
+    var router: ToDoListRouterInput?
     
     private let userDataService = UserDataService()
     private var todos: [ToDo] = []
@@ -35,7 +19,7 @@ final class ToDoListPresenterImpl {
 
 //MARK: - Helpers
 
-private extension ToDoListPresenterImpl {
+private extension ToDoListPresenter {
     func getFilteredTodos() -> [ToDo] {
         guard !searchQuery.isEmpty else { return todos }
         return todos.filter {
@@ -45,9 +29,9 @@ private extension ToDoListPresenterImpl {
     
 }
 
-//MARK: - ToDoListViewToPresenter
+//MARK: - ToDoListViewToOutput
 
-extension ToDoListPresenterImpl: ToDoListViewToPresenter {
+extension ToDoListPresenter: ToDoListViewOutput {
     func viewDidLoadHandler() {
         guard userDataService.isFirstLaunch else {
             interactor?.fetchAllTodosFromStore()
@@ -92,7 +76,7 @@ extension ToDoListPresenterImpl: ToDoListViewToPresenter {
 
 // MARK: - ToDoListInterceptorToPresenter
 
-extension ToDoListPresenterImpl: ToDoListInteractorToPresenter {
+extension ToDoListPresenter: ToDoListInteractorOutput {
     func getAllTodoSuccess(_ todos: [ToDoEntity]) {
         todos.forEach { entity in
             let todo = ToDo(

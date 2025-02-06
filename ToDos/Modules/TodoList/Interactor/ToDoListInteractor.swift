@@ -1,5 +1,5 @@
 //
-//  ToDoListInteractorImpl.swift
+//  ToDoListInteractor.swift
 //  ToDos
 //
 //  Created by Daniil on 05.02.2025.
@@ -7,18 +7,10 @@
 
 import Foundation
 import Moya
-import OSLog
 
-protocol ToDoListPresenterToInteractor: AnyObject {
-    func fetchAllTodos()
-    func fetchAllTodosFromStore()
-    func updateToDoState(id: Int32)
-}
-
-final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
-    weak var presenter: ToDoListInteractorToPresenter?
+final class ToDoListInteractor: ToDoListInteractorInput {
+    weak var presenter: ToDoListInteractorOutput?
     private let provider = MoyaProvider<ToDoDataFetcher>()
-    private let logger = Logger()
 
     func fetchAllTodos() {
         provider.request(.getAllTodos) { [weak self] result in
@@ -29,11 +21,11 @@ final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
                     let todoBunch = try JSONDecoder().decode(ToDoBunch.self, from: response.data)
                     presenter?.getAllTodoSuccess(todoBunch.todos)
                 } catch {
-                    self.logger.error("error while request all todos: \(error)")
+                    LogService.error("error while request all todos: \(error)")
                 }
                 
             case .failure(let errror):
-                logger.error("Bad getAllToDos request \(errror) ")
+                LogService.error("Bad getAllToDos request \(errror) ")
             }
         }
     }
