@@ -12,4 +12,5 @@ import TinyConstraints
 protocol ToDoListViewInput: AnyObject {
     func reloadRow(at id: Int)
     func reloadTableView()
+    func setupToolBarTitle(_ title: String)
 }

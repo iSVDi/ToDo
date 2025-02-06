@@ -17,16 +17,6 @@ final class ToDoListPresenter {
     private var searchQuery: String = ""
 }
 
-//MARK: - Helpers
-
-private extension ToDoListPresenter {
-    func getFilteredTodos() -> [ToDo] {
-        guard !searchQuery.isEmpty else { return todos }
-        return todos.filter {
-            $0.description.lowercased().contains(searchQuery) || $0.description.lowercased().contains(searchQuery)
-        }
-    }
-}
 
 //MARK: - ToDoListViewToOutput
 
@@ -53,6 +43,7 @@ extension ToDoListPresenter: ToDoListViewOutput {
         guard let arrIndex = todos.firstIndex(where: { $0.id == id}) else { return }
         todos[arrIndex].isCompleted.toggle()
         interactor?.updateToDoState(id: id)
+        updateToolbarTitle()
         viewInput?.reloadRow(at: cellId)
     }
     
@@ -101,10 +92,12 @@ extension ToDoListPresenter: ToDoListInteractorOutput {
         }
         DataManager.save()
         viewInput?.reloadTableView()
+        updateToolbarTitle()
     }
     
     func getAllCoreDataTodoSuccess(_ todos: [ToDo]) {
         self.todos = todos
+        updateToolbarTitle()
     }
     
     func getTitleFromDescription(_ description: String) -> String {
@@ -123,6 +116,25 @@ extension ToDoListPresenter: ToDoListInteractorOutput {
         //TODO: implement TODO
     }
     
+    func getUncomplitedTodoCount() -> Int {
+        return getFilteredTodos().filter{ !$0.isCompleted }.count
+    }
     
 }
 
+//MARK: - Helpers
+
+private extension ToDoListPresenter {
+    func getFilteredTodos() -> [ToDo] {
+        guard !searchQuery.isEmpty else { return todos }
+        return todos.filter {
+            $0.description.lowercased().contains(searchQuery) || $0.description.lowercased().contains(searchQuery)
+        }
+    }
+    
+    func updateToolbarTitle() {
+        let count = getFilteredTodos().filter({ !$0.isCompleted }).count
+        let title = count > 0 ? "In progress: \(count)" : "All ToDos completed"
+        viewInput?.setupToolBarTitle(title)
+    }
+}

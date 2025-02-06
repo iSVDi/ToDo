@@ -10,16 +10,12 @@ import TinyConstraints
 
 final class ToDoListViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
+    private let toolBar = UIToolbar()
+    private var toolbarLabel: UILabel?
+    
+    private let operationQueue = OperationQueue()
     var presenter: ToDoListViewOutput?
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+            
     override func viewDidLoad() {
         setupViews()
         setupConstraints()
@@ -30,17 +26,24 @@ final class ToDoListViewController: UIViewController {
 
 extension ToDoListViewController: ToDoListViewInput {
     func reloadRow(at id: Int) {
-        DispatchQueue.main.async { [weak self] in
+        mainQueue { [weak self] in
             self?.tableView.reloadRows(at: [IndexPath(row: id, section: 0)], with: .none)
         }
-        
     }
     
     func reloadTableView() {
-        DispatchQueue.main.async { [weak self] in
+        mainQueue { [weak self] in
             self?.tableView.reloadData()
         }
     }
+    
+    func setupToolBarTitle(_ title: String) {
+        mainQueue { [weak self] in
+            self?.toolbarLabel?.text = title
+            self?.toolbarLabel?.sizeToFit()
+        }
+    }
+    
 }
 
 //MARK: - UITableViewDelegate, UITableViewDataSource
@@ -65,30 +68,26 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let presenter,
-              let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
-              let todoCell = cell as? ToDoListTableViewCell else { return }
+              let _ = tableView.dequeueReusableCell(
+                withIdentifier: Constants.tableViewReusableCell
+              ) as? ToDoListTableViewCell else {
+            return
+        }
         presenter.didTapCell(cellId: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let actionProvider: UIContextMenuActionProvider = { _ in
-            let editAction: UIMenuElement = UIAction(
-                title: "Edit",
-                image: nil,
-                handler: { _ in print("handle edit todo ") }
-            )
+            let editAction: UIMenuElement = UIAction(title: "Edit") { _ in
+                print("handle edit todo ")
+            }
             
-            let deleteAction: UIMenuElement = UIAction(
-                title: "Delete",
-                image: nil,
-                handler: { [weak self] _ in
-                    self?.presenter?.deleteTodo(cellId: indexPath.row)
-                }
-            )
+            let deleteAction: UIMenuElement = UIAction(title: "Delete") { [weak self] _ in
+                self?.presenter?.deleteTodo(cellId: indexPath.row)
+            }
             
             let menu = UIMenu(title: "", image: nil, identifier: nil, children: [editAction, deleteAction])
             return menu
-            
         }
         
         return UIContextMenuConfiguration(actionProvider: actionProvider)
@@ -135,11 +134,42 @@ private extension ToDoListViewController {
         navigationItem.searchController = search
         navigationItem.hidesSearchBarWhenScrolling = false
         
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        let textLabel = UILabel()
+        textLabel.textColor = .white
+        toolbarLabel = textLabel
+        let textButton = UIBarButtonItem(customView: textLabel)
+        
+        let addButton = UIBarButtonItem(
+            image: UIImage(systemName: "square.and.pencil"),
+            style: .plain,
+            target: self,
+            action: #selector(addButtonHandler)
+        )
+        addButton.tintColor = .yellow
+        toolBar.barTintColor = .black
+        toolBar.setItems([spaceButton, textButton, spaceButton, addButton], animated: false)
     }
     
     func setupConstraints() {
+        view.addSubview(toolBar)
+        toolBar.horizontalToSuperview()
+        toolBar.bottomToSuperview(usingSafeArea: true)
+        toolBar.height(49)
+        
         view.addSubview(tableView)
-        tableView.edgesToSuperview(usingSafeArea: true)
+        tableView.edgesToSuperview(excluding: .bottom, usingSafeArea: true)
+        tableView.bottomToTop(of: toolBar)
+    }
+    
+    func mainQueue(_ task: @escaping () -> Void) {
+        OperationQueue.main.addOperation(task)
+    }
+    
+    @objc
+    private func addButtonHandler() {
+        print("handle add button")
     }
 }
 
