@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 
 class DataManager {
+    
     static var context : NSManagedObjectContext {
         get {
             let context = CoreDataStack.shared.persistanceContainer.viewContext
@@ -39,10 +40,22 @@ class DataManager {
         return managedObject
     }
     
-    static func fetchAllToDoModel() -> [ToDoModel] {
+    static func fetchAllTodoModel() -> [ToDoModel] {
         let fetchRequest = NSFetchRequest<ToDoModel>(entityName: "ToDoModel")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
-        let toDoModels = try? context.fetch(fetchRequest)
-        return toDoModels ?? []
+        let todoModels = try? context.fetch(fetchRequest)
+        return todoModels ?? []
+    }
+    
+    static func updateIsCompletedTodoState(id: Int32) {
+        let fetchRequest = NSFetchRequest<ToDoModel>(entityName: "ToDoModel")
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
+        do {
+            let todoModel = try context.fetch(fetchRequest).first
+            todoModel?.isCompleted.toggle()
+            save()
+        } catch {
+            LogService.error("error while updateIsCompletedTodoState ToDo: \(error)")
+        }
     }
 }

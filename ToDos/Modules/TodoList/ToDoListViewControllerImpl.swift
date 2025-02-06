@@ -70,6 +70,29 @@ extension ToDoListViewControllerImpl: UITableViewDelegate, UITableViewDataSource
         presenter.didTapCell(cellId: indexPath.row)
     }
     
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let actionProvider: UIContextMenuActionProvider = { _ in
+            let editAction: UIMenuElement = UIAction(
+                title: "Edit",
+                image: nil,
+                handler: { _ in print("handle edit todo ") }
+            )
+            
+            let deleteAction: UIMenuElement = UIAction(
+                title: "Delete",
+                image: nil,
+                handler: { _ in print("handle delete todo ") }
+            )
+            
+            let menu = UIMenu(title: "", image: nil, identifier: nil, children: [editAction, deleteAction])
+            return menu
+            
+        }
+        
+        return UIContextMenuConfiguration(actionProvider: actionProvider)
+
+    }
+    
 }
 
 //MARK: - UISearchResultsUpdating

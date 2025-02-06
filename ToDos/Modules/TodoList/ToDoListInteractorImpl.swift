@@ -12,6 +12,7 @@ import OSLog
 protocol ToDoListPresenterToInteractor: AnyObject {
     func fetchAllTodos()
     func fetchAllTodosFromStore()
+    func updateToDoState(id: Int32)
 }
 
 final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
@@ -38,7 +39,7 @@ final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
     }
     
     func fetchAllTodosFromStore() {
-        let todos = DataManager.fetchAllToDoModel().map {
+        let todos = DataManager.fetchAllTodoModel().map {
             ToDo(
                 id: $0.id,
                 title: $0.title,
@@ -48,6 +49,10 @@ final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
             )
         }
         presenter?.getAllCoreDataTodoSuccess(todos)
+    }
+    
+    func updateToDoState(id: Int32) {
+        DataManager.updateIsCompletedTodoState(id: id)
     }
     
     

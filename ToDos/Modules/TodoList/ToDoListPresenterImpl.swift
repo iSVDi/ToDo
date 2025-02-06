@@ -67,6 +67,7 @@ extension ToDoListPresenterImpl: ToDoListViewToPresenter {
         let id = filteredTodos[cellId].id
         guard let arrIndex = todos.firstIndex(where: { $0.id == id}) else { return }
         todos[arrIndex].isCompleted.toggle()
+        interactor?.updateToDoState(id: id)
         viewController?.reloadRow(at: cellId)
     }
     
