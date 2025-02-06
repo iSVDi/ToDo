@@ -22,7 +22,8 @@ final class ToDoListAssembly {
         presenter.router = router
         interactor.presenter = presenter
         
-        return UINavigationController(rootViewController: viewController)
+        let navController = UINavigationController(rootViewController: viewController)
+        return navController
     }
     
 }

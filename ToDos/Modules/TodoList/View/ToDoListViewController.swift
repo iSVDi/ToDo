@@ -111,6 +111,14 @@ private extension ToDoListViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         
+        let navBar = navigationController?.navigationBar
+        
+        let standardAppearance = UINavigationBarAppearance()
+        standardAppearance.configureWithTransparentBackground()
+        standardAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        standardAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navBar?.standardAppearance = standardAppearance
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 106
@@ -130,7 +138,7 @@ private extension ToDoListViewController {
     
     func setupConstraints() {
         view.addSubview(tableView)
-        tableView.edgesToSuperview()
+        tableView.edgesToSuperview(usingSafeArea: true)
     }
 }
 
