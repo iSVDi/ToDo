@@ -11,6 +11,7 @@ import OSLog
 
 protocol ToDoListPresenterToInteractor: AnyObject {
     func fetchAllTodos()
+    func fetchAllTodosFromStore()
 }
 
 final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
@@ -25,7 +26,7 @@ final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
             case .success(let response):
                 do {
                     let todoBunch = try JSONDecoder().decode(ToDoBunch.self, from: response.data)
-                    presenter?.getAllTodoSuccess(todos: todoBunch.todos)
+                    presenter?.getAllTodoSuccess(todoBunch.todos)
                 } catch {
                     self.logger.error("error while request all todos: \(error)")
                 }
@@ -34,6 +35,19 @@ final class ToDoListInteractorImpl: ToDoListPresenterToInteractor {
                 logger.error("Bad getAllToDos request \(errror) ")
             }
         }
+    }
+    
+    func fetchAllTodosFromStore() {
+        let todos = DataManager.fetchAllToDoModel().map {
+            ToDo(
+                id: $0.id,
+                title: $0.title,
+                description: $0.details,
+                isCompleted: $0.isCompleted,
+                creationDate: $0.creationDate
+            )
+        }
+        presenter?.getAllCoreDataTodoSuccess(todos)
     }
     
     

@@ -18,7 +18,8 @@ protocol ToDoListViewToPresenter: AnyObject {
 }
 
 protocol ToDoListInteractorToPresenter: AnyObject {
-    func getAllTodoSuccess(todos: [ToDoEntity])
+    func getAllTodoSuccess(_ todos: [ToDoEntity])
+    func getAllCoreDataTodoSuccess(_ todos: [ToDo])
     func getAllTodoFailure()
 }
 
@@ -27,6 +28,7 @@ final class ToDoListPresenterImpl {
     var interactor: ToDoListPresenterToInteractor?
     var router: ToDoListPresenterToRouter?
     
+    private let userDataService = UserDataService()
     private var todos: [ToDo] = []
     private var searchQuery: String = ""
 }
@@ -40,13 +42,19 @@ private extension ToDoListPresenterImpl {
             $0.description.lowercased().contains(searchQuery) || $0.description.lowercased().contains(searchQuery)
         }
     }
+    
 }
 
 //MARK: - ToDoListViewToPresenter
 
 extension ToDoListPresenterImpl: ToDoListViewToPresenter {
     func viewDidLoadHandler() {
+        guard userDataService.isFirstLaunch else {
+            interactor?.fetchAllTodosFromStore()
+            return
+        }
         interactor?.fetchAllTodos()
+        userDataService.isFirstLaunch = false
     }
     
     func getAllTodos() -> [ToDo] {
@@ -84,7 +92,7 @@ extension ToDoListPresenterImpl: ToDoListViewToPresenter {
 // MARK: - ToDoListInterceptorToPresenter
 
 extension ToDoListPresenterImpl: ToDoListInteractorToPresenter {
-    func getAllTodoSuccess(todos: [ToDoEntity]) {
+    func getAllTodoSuccess(_ todos: [ToDoEntity]) {
         todos.forEach { entity in
             let todo = ToDo(
                 id: entity.id,
@@ -104,6 +112,10 @@ extension ToDoListPresenterImpl: ToDoListInteractorToPresenter {
         }
         DataManager.save()
         viewController?.reloadTableView()
+    }
+    
+    func getAllCoreDataTodoSuccess(_ todos: [ToDo]) {
+        self.todos = todos
     }
     
     func getTitleFromDescription(_ description: String) -> String {
