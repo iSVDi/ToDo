@@ -8,7 +8,7 @@
 import Foundation
 
 final class ToDoListPresenter {
-    weak var viewController: ToDoListViewInput?
+    weak var viewInput: ToDoListViewInput?
     var interactor: ToDoListInteractorInput?
     var router: ToDoListRouterInput?
     
@@ -26,7 +26,6 @@ private extension ToDoListPresenter {
             $0.description.lowercased().contains(searchQuery) || $0.description.lowercased().contains(searchQuery)
         }
     }
-    
 }
 
 //MARK: - ToDoListViewToOutput
@@ -34,9 +33,11 @@ private extension ToDoListPresenter {
 extension ToDoListPresenter: ToDoListViewOutput {
     func viewDidLoadHandler() {
         guard userDataService.isFirstLaunch else {
+            LogService.info("Loading todos from CoreData")
             interactor?.fetchAllTodosFromStore()
             return
         }
+        LogService.info("Loading todos via API")
         interactor?.fetchAllTodos()
         userDataService.isFirstLaunch = false
     }
@@ -52,7 +53,7 @@ extension ToDoListPresenter: ToDoListViewOutput {
         guard let arrIndex = todos.firstIndex(where: { $0.id == id}) else { return }
         todos[arrIndex].isCompleted.toggle()
         interactor?.updateToDoState(id: id)
-        viewController?.reloadRow(at: cellId)
+        viewInput?.reloadRow(at: cellId)
     }
     
     func createTodo() {
@@ -63,13 +64,16 @@ extension ToDoListPresenter: ToDoListViewOutput {
         //TODO: implement
     }
     
-    func deleteTodo(id: Int) {
-        //TODO: implement
+    func deleteTodo(cellId: Int) {
+        let id = getFilteredTodos()[cellId].id
+        interactor?.deleteToDo(id: id)
+        todos.removeAll(where: { $0.id == id } )
+        viewInput?.reloadTableView()
     }
     
     func searchBy(text: String) {
         searchQuery = text.lowercased()
-        viewController?.reloadTableView()
+        viewInput?.reloadTableView()
     }
 }
 
@@ -96,7 +100,7 @@ extension ToDoListPresenter: ToDoListInteractorOutput {
             todoModel.creationDate = todo.creationDate
         }
         DataManager.save()
-        viewController?.reloadTableView()
+        viewInput?.reloadTableView()
     }
     
     func getAllCoreDataTodoSuccess(_ todos: [ToDo]) {

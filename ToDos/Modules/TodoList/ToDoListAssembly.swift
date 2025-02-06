@@ -17,7 +17,7 @@ final class ToDoListAssembly {
         let router = ToDoListRouter()
         
         viewController.presenter = presenter
-        presenter.viewController = viewController
+        presenter.viewInput = viewController
         presenter.interactor = interactor
         presenter.router = router
         interactor.presenter = presenter

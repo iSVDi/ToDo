@@ -13,4 +13,5 @@ protocol ToDoListInteractorInput: AnyObject {
     func fetchAllTodos()
     func fetchAllTodosFromStore()
     func updateToDoState(id: Int32)
+    func deleteToDo(id: Int32)
 }

@@ -14,6 +14,6 @@ protocol ToDoListViewOutput: AnyObject {
     func didTapCell(cellId: Int)
     func createTodo()
     func editTodo(id: Int)
-    func deleteTodo(id: Int)
+    func deleteTodo(cellId: Int)
     func searchBy(text: String)
 }

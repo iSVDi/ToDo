@@ -8,8 +8,6 @@
 import UIKit
 import TinyConstraints
 
-
-
 final class ToDoListViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
     var presenter: ToDoListViewOutput?
@@ -78,7 +76,9 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
             let deleteAction: UIMenuElement = UIAction(
                 title: "Delete",
                 image: nil,
-                handler: { _ in print("handle delete todo ") }
+                handler: { [weak self] _ in
+                    self?.presenter?.deleteTodo(cellId: indexPath.row)
+                }
             )
             
             let menu = UIMenu(title: "", image: nil, identifier: nil, children: [editAction, deleteAction])

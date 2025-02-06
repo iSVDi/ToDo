@@ -47,5 +47,9 @@ final class ToDoListInteractor: ToDoListInteractorInput {
         DataManager.updateIsCompletedTodoState(id: id)
     }
     
+    func deleteToDo(id: Int32) {
+        DataManager.deleteTodo(id: id)
+    }
+    
     
 }

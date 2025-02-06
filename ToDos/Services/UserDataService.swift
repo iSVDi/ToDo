@@ -11,7 +11,7 @@ enum UserDataKeys: String {
     case isFirstLaunch
 }
 
-class UserDataService: UserDefaultBase<UserDataKeys> {
+final class UserDataService: UserDefaultBase<UserDataKeys> {
     private let standard = UserDefaults.standard
     
     override init() {
