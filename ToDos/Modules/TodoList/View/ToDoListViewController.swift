@@ -11,7 +11,7 @@ import TinyConstraints
 final class ToDoListViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
     var presenter: ToDoListViewOutput?
-
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -30,11 +30,16 @@ final class ToDoListViewController: UIViewController {
 
 extension ToDoListViewController: ToDoListViewInput {
     func reloadRow(at id: Int) {
-        tableView.reloadRows(at: [IndexPath(row: id, section: 0)], with: .none)
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadRows(at: [IndexPath(row: id, section: 0)], with: .none)
+        }
+        
     }
     
     func reloadTableView() {
-        tableView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
+        }
     }
 }
 
@@ -52,7 +57,7 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let todos = presenter?.getAllTodos(),
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
+              let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
               let todoCell = cell as? ToDoListTableViewCell else { return UITableViewCell() }
         todoCell.setupData(model: todos[indexPath.row])
         return todoCell
@@ -60,7 +65,7 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let presenter,
-                let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
+              let cell = tableView.dequeueReusableCell(withIdentifier: Constants.tableViewReusableCell),
               let todoCell = cell as? ToDoListTableViewCell else { return }
         presenter.didTapCell(cellId: indexPath.row)
     }
@@ -87,7 +92,7 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         return UIContextMenuConfiguration(actionProvider: actionProvider)
-
+        
     }
     
 }
@@ -97,7 +102,7 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
 extension ToDoListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let presenter,
-            let text = searchController.searchBar.text else { return }
+              let text = searchController.searchBar.text else { return }
         presenter.searchBy(text: text)
     }
     
@@ -107,17 +112,13 @@ extension ToDoListViewController: UISearchResultsUpdating {
 
 private extension ToDoListViewController {
     func setupViews() {
-        navigationItem.title = Constants.navigationBar
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        
-        let navBar = navigationController?.navigationBar
-        
         let standardAppearance = UINavigationBarAppearance()
         standardAppearance.configureWithTransparentBackground()
         standardAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         standardAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navBar?.standardAppearance = standardAppearance
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.standardAppearance = standardAppearance
+        navigationItem.title = Constants.navigationBar
         
         tableView.dataSource = self
         tableView.delegate = self
