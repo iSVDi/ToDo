@@ -8,6 +8,7 @@
 import Foundation
 
 class ToDoDetailsInteractor: ToDoDetailsInteractorInput {
+
     weak var presenter: ToDoDetailsInteractorOutput?
     
     func fetchTodo(by id: Int32) {
@@ -17,20 +18,23 @@ class ToDoDetailsInteractor: ToDoDetailsInteractorInput {
             return
         }
         
-        let todo = todoModel.mapToTodo()
-        presenter?.getTodoSuccess(todo)
+        presenter?.getTodoModelSuccess(todoModel)
     }
     
-    func createNewTodo() {
-        let todoModel = DataManager.createTodoModel()
-        todoModel.title = "Untitled"
-        todoModel.details = "Empty description"
-        todoModel.creationDate = .now
-        todoModel.isCompleted = false
-        let todo = todoModel.mapToTodo()
-        
-        presenter?.getTodoSuccess(todo)
+    func saveChanges() {
+        DataManager.save()
     }
+    
+    
+    func fetchLastCreatedTodo() {
+        guard let todoModel = DataManager.fetchLastCreatedTodo() else {
+            presenter?.getTodoFailure()
+            return
+        }
+        presenter?.getTodoModelSuccess(todoModel)
+    }
+    
+    
 }
 
 extension ToDoModel {

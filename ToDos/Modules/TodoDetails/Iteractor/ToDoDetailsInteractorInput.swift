@@ -9,6 +9,7 @@
 import Foundation
 
 protocol ToDoDetailsInteractorInput: AnyObject {
+    func saveChanges()
+    func fetchLastCreatedTodo()
     func fetchTodo(by id: Int32)
-    func createNewTodo()
 }

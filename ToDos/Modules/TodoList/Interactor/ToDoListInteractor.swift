@@ -12,6 +12,15 @@ final class ToDoListInteractor: ToDoListInteractorInput {
     weak var presenter: ToDoListInteractorOutput?
     private let provider = MoyaProvider<ToDoDataFetcher>()
 
+    func createEmptyTodo() {
+        let todo = DataManager.createTodoModel()
+        todo.id = DataManager.getMaxId() + 1
+        todo.title = "Untitled"
+        todo.isCompleted = false
+        todo.creationDate = .now
+        DataManager.save()
+    }
+    
     func fetchAllTodos() {
         provider.request(.getAllTodos) { [weak self] result in
             guard let self else { return }

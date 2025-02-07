@@ -12,6 +12,7 @@ class ToDoDetailsViewController: UIViewController {
     
     private let titleField = UITextField()
     private let dateLabel = UILabel()
+    private let datePicker = UIDatePicker()
     private let textView = UITextView()
     
     var presenter: ToDoDetailsViewOutput?
@@ -25,7 +26,9 @@ class ToDoDetailsViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        presenter?.viewWillDisapearHandler()
+        guard let title = titleField.text, let description = textView.text else { return }
+        let todoDetailsModel = ToDoDetails(title: title, description: description)
+        presenter?.saveTodo(todoDetails: todoDetailsModel)
     }
     
 }
@@ -66,7 +69,6 @@ private extension ToDoDetailsViewController {
         textView.font = .systemFont(ofSize: 16)
         ///This ensures the UITextView resizes itself based on its content.
         textView.isScrollEnabled = false
-        
     }
     
     func setupLayout() {

@@ -19,7 +19,11 @@ final class ToDoListViewController: UIViewController {
     override func viewDidLoad() {
         setupViews()
         setupConstraints()
-        presenter?.viewDidLoadHandler()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter?.viewWillAppearHandler()
     }
     
 }

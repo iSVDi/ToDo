@@ -9,7 +9,7 @@
 import Foundation
 
 protocol ToDoListViewOutput: AnyObject {
-    func viewDidLoadHandler()
+    func viewWillAppearHandler()
     func getAllTodos() -> [ToDo]
     func didTapCell(cellId: Int)
     func createTodo()

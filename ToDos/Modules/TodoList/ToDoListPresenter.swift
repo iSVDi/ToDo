@@ -21,7 +21,7 @@ final class ToDoListPresenter {
 //MARK: - ToDoListViewToOutput
 
 extension ToDoListPresenter: ToDoListViewOutput {
-    func viewDidLoadHandler() {
+    func viewWillAppearHandler() {
         guard userDataService.isFirstLaunch else {
             LogService.info("Loading todos from CoreData")
             interactor?.fetchAllTodosFromStore()
@@ -48,7 +48,8 @@ extension ToDoListPresenter: ToDoListViewOutput {
     }
     
     func createTodo() {
-        router?.pushToTodoDetails(from: viewInput?.navController, with: .view)
+        interactor?.createEmptyTodo()
+        router?.pushToTodoDetails(from: viewInput?.navController, with: .create)
     }
     
     func editTodo(cellId: Int) {
@@ -73,6 +74,7 @@ extension ToDoListPresenter: ToDoListViewOutput {
 // MARK: - ToDoListInterceptorToPresenter
 
 extension ToDoListPresenter: ToDoListInteractorOutput {
+    
     func getAllTodoSuccess(_ todos: [ToDoEntity]) {
         todos.forEach { entity in
             let todo = ToDo(
@@ -92,12 +94,14 @@ extension ToDoListPresenter: ToDoListInteractorOutput {
             todoModel.creationDate = todo.creationDate
         }
         DataManager.save()
+        self.todos.sort(by: { $0.id > $1.id})
         viewInput?.reloadTableView()
         updateToolbarTitle()
     }
     
     func getAllCoreDataTodoSuccess(_ todos: [ToDo]) {
         self.todos = todos
+        viewInput?.reloadTableView()
         updateToolbarTitle()
     }
     

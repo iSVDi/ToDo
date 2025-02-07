@@ -10,8 +10,8 @@ import Foundation
 class ToDoDetailsPresenter {
     weak var viewInput: ToDoDetailsViewInput?
     var interactor: ToDoDetailsInteractorInput?
-    
     private let todoState: ToDoState
+    private var todoModel: ToDoModel?
     
     init(todoState: ToDoState) {
         self.todoState = todoState
@@ -23,28 +23,26 @@ class ToDoDetailsPresenter {
 extension ToDoDetailsPresenter: ToDoDetailsViewOutput {
     func viewDidLoadHandler() {
         switch todoState {
-        case .view:
-            interactor?.createNewTodo()
         case .edit(let todoId):
             interactor?.fetchTodo(by: todoId)
+        case .create:
+            interactor?.fetchLastCreatedTodo()
         }
         
     }
     
-    func viewWillDisapearHandler() {
-        // TODO: implement
+    func saveTodo(todoDetails: ToDoDetails) {
+        guard let todoModel, shoudUpdateTodo(todoDetails: todoDetails) else { return }
+        todoModel.title = todoDetails.title
+        todoModel.details = todoDetails.description
+        interactor?.saveChanges()
     }
-    
-    
-    
 }
 
 extension ToDoDetailsPresenter: ToDoDetailsInteractorOutput {
-    func getTodoSuccess(_ todo : ToDo) {
-        if case .view = todoState {
-            viewInput?.disableUserInteraction()
-        }
-        viewInput?.setupData(todo: todo)
+    func getTodoModelSuccess(_ todoModel: ToDoModel) {
+        self.todoModel = todoModel
+        viewInput?.setupData(todo: todoModel.mapToTodo())
     }
     
     func getTodoFailure() {
@@ -52,6 +50,13 @@ extension ToDoDetailsPresenter: ToDoDetailsInteractorOutput {
     }
     
     
+}
+
+private extension ToDoDetailsPresenter {
+    func shoudUpdateTodo(todoDetails: ToDoDetails) -> Bool {
+        guard let todoModel else { return false}
+        return todoModel.title != todoDetails.title || todoModel.details != todoDetails.description
+    }
 }
 
 

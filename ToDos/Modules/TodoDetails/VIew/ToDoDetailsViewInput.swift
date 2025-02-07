@@ -10,6 +10,5 @@ import Foundation
 import UIKit
 
 protocol ToDoDetailsViewInput: AnyObject {
-    func disableUserInteraction()
     func setupData(todo: ToDo)
 }

@@ -9,6 +9,6 @@
 import Foundation
 
 protocol ToDoDetailsInteractorOutput: AnyObject {
-    func getTodoSuccess(_ todo: ToDo)
+    func getTodoModelSuccess(_ todo: ToDoModel)
     func getTodoFailure()
 }

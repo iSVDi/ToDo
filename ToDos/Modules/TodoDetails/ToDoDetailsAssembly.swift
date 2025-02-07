@@ -8,8 +8,8 @@
 import UIKit
 
 enum ToDoState {
-    case view
     case edit(_ todoId: Int32)
+    case create
 }
 
 class ToDoDetailsAssembly {

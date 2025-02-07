@@ -10,6 +10,7 @@ import Foundation
 import Moya
 
 protocol ToDoListInteractorInput: AnyObject {
+    func createEmptyTodo()
     func fetchAllTodos()
     func fetchAllTodosFromStore()
     func updateToDoState(id: Int32)
