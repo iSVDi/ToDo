@@ -34,7 +34,6 @@ class ToDoListTableViewCell: UITableViewCell {
         updateViewsBy(by: model.isCompleted)
     }
     
-    
 }
 
 private extension ToDoListTableViewCell {

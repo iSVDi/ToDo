@@ -29,6 +29,7 @@ final class ToDoListViewController: UIViewController {
 }
 
 extension ToDoListViewController: ToDoListViewInput {
+    
     var navController: UINavigationController? {
         return self.navigationController
     }
@@ -97,9 +98,7 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
             let menu = UIMenu(title: "", image: nil, identifier: nil, children: [editAction, deleteAction])
             return menu
         }
-        
         return UIContextMenuConfiguration(actionProvider: actionProvider)
-        
     }
     
 }
@@ -107,6 +106,7 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
 //MARK: - UISearchResultsUpdating
 
 extension ToDoListViewController: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
         guard let presenter,
               let text = searchController.searchBar.text else { return }
@@ -118,6 +118,7 @@ extension ToDoListViewController: UISearchResultsUpdating {
 //MARK: - Helpers
 
 private extension ToDoListViewController {
+    
     func setupViews() {
         let standardAppearance = UINavigationBarAppearance()
         standardAppearance.configureWithTransparentBackground()
@@ -179,6 +180,7 @@ private extension ToDoListViewController {
     private func addButtonHandler() {
         presenter?.createTodo()
     }
+    
 }
 
 fileprivate enum Constants {

@@ -13,11 +13,7 @@ class ToDoDetailsInteractor: ToDoDetailsInteractorInput {
     
     func fetchTodo(by id: Int32) {
         
-        guard let todoModel = DataManager.fetchTodoModel(by: id) else {
-            presenter?.getTodoFailure()
-            return
-        }
-        
+        guard let todoModel = DataManager.fetchTodoModel(by: id) else { return }
         presenter?.getTodoModelSuccess(todoModel)
     }
     
@@ -25,27 +21,11 @@ class ToDoDetailsInteractor: ToDoDetailsInteractorInput {
         DataManager.save()
     }
     
-    
     func fetchLastCreatedTodo() {
-        guard let todoModel = DataManager.fetchLastCreatedTodo() else {
-            presenter?.getTodoFailure()
-            return
-        }
+        guard let todoModel = DataManager.fetchLastCreatedTodo() else { return }
         presenter?.getTodoModelSuccess(todoModel)
     }
     
-    
 }
 
-extension ToDoModel {
-    
-    func mapToTodo() -> ToDo {
-        ToDo(
-            id: id,
-            title: title,
-            description: details,
-            isCompleted: isCompleted,
-            creationDate: creationDate
-        )
-    }
-}
+

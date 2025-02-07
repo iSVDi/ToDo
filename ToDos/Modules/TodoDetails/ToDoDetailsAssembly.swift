@@ -7,10 +7,7 @@
 
 import UIKit
 
-enum ToDoState {
-    case edit(_ todoId: Int32)
-    case create
-}
+
 
 class ToDoDetailsAssembly {
     

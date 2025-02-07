@@ -11,5 +11,4 @@ import Foundation
 protocol ToDoListInteractorOutput: AnyObject {
     func getAllTodoSuccess(_ todos: [ToDoEntity])
     func getAllCoreDataTodoSuccess(_ todos: [ToDo])
-    func getAllTodoFailure()
 }

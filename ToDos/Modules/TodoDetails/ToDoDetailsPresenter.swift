@@ -8,6 +8,7 @@
 import Foundation
 
 class ToDoDetailsPresenter {
+    
     weak var viewInput: ToDoDetailsViewInput?
     var interactor: ToDoDetailsInteractorInput?
     private let todoState: ToDoState
@@ -19,8 +20,8 @@ class ToDoDetailsPresenter {
     
 }
 
-
 extension ToDoDetailsPresenter: ToDoDetailsViewOutput {
+    
     func viewDidLoadHandler() {
         switch todoState {
         case .edit(let todoId):
@@ -28,7 +29,6 @@ extension ToDoDetailsPresenter: ToDoDetailsViewOutput {
         case .create:
             interactor?.fetchLastCreatedTodo()
         }
-        
     }
     
     func saveTodo(todoDetails: ToDoDetails) {
@@ -37,28 +37,23 @@ extension ToDoDetailsPresenter: ToDoDetailsViewOutput {
         todoModel.details = todoDetails.description
         interactor?.saveChanges()
     }
+    
 }
 
 extension ToDoDetailsPresenter: ToDoDetailsInteractorOutput {
+    
     func getTodoModelSuccess(_ todoModel: ToDoModel) {
         self.todoModel = todoModel
         viewInput?.setupData(todo: todoModel.mapToTodo())
     }
     
-    func getTodoFailure() {
-        // TODO: implement
-    }
-    
-    
 }
 
 private extension ToDoDetailsPresenter {
+    
     func shoudUpdateTodo(todoDetails: ToDoDetails) -> Bool {
         guard let todoModel else { return false}
         return todoModel.title != todoDetails.title || todoModel.details != todoDetails.description
     }
+    
 }
-
-
-
-

@@ -60,5 +60,4 @@ final class ToDoListInteractor: ToDoListInteractorInput {
         DataManager.deleteTodo(id: id)
     }
     
-    
 }
