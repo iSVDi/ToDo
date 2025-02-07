@@ -48,11 +48,12 @@ extension ToDoListPresenter: ToDoListViewOutput {
     }
     
     func createTodo() {
-        router?.pushToTodoDetails(from: viewInput?.navController)
+        router?.pushToTodoDetails(from: viewInput?.navController, with: .view)
     }
     
-    func editTodo(id: Int) {
-        //TODO: implement
+    func editTodo(cellId: Int) {
+        let todoId = getFilteredTodos()[cellId].id
+        router?.pushToTodoDetails(from: viewInput?.navController, with: .edit(todoId))
     }
     
     func deleteTodo(cellId: Int) {

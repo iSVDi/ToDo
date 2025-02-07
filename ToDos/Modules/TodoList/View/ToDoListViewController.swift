@@ -83,7 +83,7 @@ extension ToDoListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let actionProvider: UIContextMenuActionProvider = { _ in
             let editAction: UIMenuElement = UIAction(title: "Edit") { _ in
-                print("handle edit todo ")
+                self.presenter?.editTodo(cellId: indexPath.row)
             }
             
             let deleteAction: UIMenuElement = UIAction(title: "Delete") { [weak self] _ in

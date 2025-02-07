@@ -9,10 +9,12 @@ import Foundation
 import UIKit
 
 final class ToDoListRouter: ToDoListRouterInput {
-    func pushToTodoDetails(from navController: UINavigationController?) {
-        let vc = ToDoDetailsAssembly.getModule()
+    
+    func pushToTodoDetails(from navController: UINavigationController?, with state: ToDoState) {
+        let vc = ToDoDetailsAssembly.getModule(with: state)
         navController?.pushViewController(vc, animated: true)
     }
+    
 }
 
 

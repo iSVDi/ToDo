@@ -13,7 +13,7 @@ protocol ToDoListViewOutput: AnyObject {
     func getAllTodos() -> [ToDo]
     func didTapCell(cellId: Int)
     func createTodo()
-    func editTodo(id: Int)
+    func editTodo(cellId: Int)
     func deleteTodo(cellId: Int)
     func searchBy(text: String)
 }

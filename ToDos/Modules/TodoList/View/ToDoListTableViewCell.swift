@@ -29,7 +29,7 @@ class ToDoListTableViewCell: UITableViewCell {
         
         titleLabel.attributedText = getTitle(isCompleted: model.isCompleted, title: model.title)
         descriptionLabel.text = model.description
-        dateLabel.text = getDateLabelFrom(model.creationDate)
+        dateLabel.text = model.creationDate.getFormattedDate()
         
         updateViewsBy(by: model.isCompleted)
     }

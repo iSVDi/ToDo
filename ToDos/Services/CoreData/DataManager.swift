@@ -48,6 +48,18 @@ class DataManager {
         return todoModels ?? []
     }
     
+    static func fetchTodoModel(by id: Int32) -> ToDoModel? {
+        let fetchRequest = NSFetchRequest<ToDoModel>(entityName: DataManager.modelName)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
+        do {
+            let todoModel = try context.fetch(fetchRequest).first
+            return todoModel
+        } catch {
+            LogService.error("Error while fetchTodoModel ToDo: \(error)")
+        }
+        return nil
+    }
+    
     static func updateIsCompletedTodoState(id: Int32) {
         let fetchRequest = NSFetchRequest<ToDoModel>(entityName: DataManager.modelName)
         fetchRequest.predicate = NSPredicate(format: "id == %d", id)
