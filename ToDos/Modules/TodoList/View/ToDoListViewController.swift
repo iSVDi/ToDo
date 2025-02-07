@@ -25,6 +25,10 @@ final class ToDoListViewController: UIViewController {
 }
 
 extension ToDoListViewController: ToDoListViewInput {
+    var navController: UINavigationController? {
+        return self.navigationController
+    }
+    
     func reloadRow(at id: Int) {
         mainQueue { [weak self] in
             self?.tableView.reloadRows(at: [IndexPath(row: id, section: 0)], with: .none)
@@ -115,8 +119,8 @@ private extension ToDoListViewController {
         standardAppearance.configureWithTransparentBackground()
         standardAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         standardAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.standardAppearance = standardAppearance
+        navController?.navigationBar.prefersLargeTitles = true
+        navController?.navigationBar.standardAppearance = standardAppearance
         navigationItem.title = Constants.navigationBar
         
         tableView.dataSource = self
@@ -169,11 +173,11 @@ private extension ToDoListViewController {
     
     @objc
     private func addButtonHandler() {
-        print("handle add button")
+        presenter?.createTodo()
     }
 }
 
 fileprivate enum Constants {
-    static let navigationBar = "Задачи"
+    static let navigationBar = "ToDos"
     static let tableViewReusableCell = "\(ToDoListTableViewCell.self)"
 }

@@ -10,6 +10,7 @@ import UIKit
 import TinyConstraints
 
 protocol ToDoListViewInput: AnyObject {
+    var navController: UINavigationController? { get }
     func reloadRow(at id: Int)
     func reloadTableView()
     func setupToolBarTitle(_ title: String)

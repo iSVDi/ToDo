@@ -10,5 +10,5 @@ import Foundation
 import UIKit
 
 protocol ToDoListRouterInput: AnyObject {
-    func push(vc: UIViewController, from navController: UINavigationController)
+    func pushToTodoDetails(from navController: UINavigationController?)
 }
